@@ -17,13 +17,13 @@ class HFModel:
         self.model = None
         self.tokenizer = None
         self.debug = False
-        print("In SGPT Constructor")
+        print("In HF Constructor")
 
 
     def init_model(self,model_name = None):
         # Get our models - The package will take care of downloading the models automatically
         # For best performance: Muennighoff/SGPT-5.8B-weightedmean-nli-bitfit
-        print("Init model",model_name)
+        #print("Init model",model_name)
         if (model_name is None):
             model_name = "sentence-transformers/all-MiniLM-L6-v2"
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -36,7 +36,7 @@ class HFModel:
         return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)
 
     def compute_embeddings(self,input_data,is_file):
-        print("Computing embeddings for:", input_data[:20])
+        #print("Computing embeddings for:", input_data[:20])
         model = self.model
         tokenizer = self.tokenizer
 
@@ -60,11 +60,11 @@ class HFModel:
         # Calculate cosine similarities
         # Cosine similarities are in [-1, 1]. Higher means more similar
         cosine_dict = {}
-        print("Total sentences",len(texts))
+        #print("Total sentences",len(texts))
         for i in range(len(texts)):
                 cosine_dict[texts[i]] = 1 - cosine(embeddings[main_index], embeddings[i])
 
-        print("Input sentence:",texts[main_index])
+        #print("Input sentence:",texts[main_index])
         sorted_dict = dict(sorted(cosine_dict.items(), key=lambda item: item[1],reverse = True))
         if (self.debug):
             for key in sorted_dict:
