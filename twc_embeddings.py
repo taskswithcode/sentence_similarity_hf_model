@@ -35,7 +35,7 @@ class HFModel:
         input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
         return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)
 
-    def compute_embeddings(self,input_data,is_file):
+    def compute_embeddings(self,input_file_name,input_data,is_file):
         #print("Computing embeddings for:", input_data[:20])
         model = self.model
         tokenizer = self.tokenizer
@@ -85,5 +85,5 @@ if __name__ == '__main__':
         results = parser.parse_args()
         obj = HFModel()
         obj.init_model(results.model)
-        texts, embeddings = obj.compute_embeddings(results.input,is_file = True)
+        texts, embeddings = obj.compute_embeddings(results.input,results.input,is_file = True)
         results = obj.output_results(results.output,texts,embeddings)
